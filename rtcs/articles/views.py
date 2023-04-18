@@ -1,7 +1,8 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from authenticator.permissions import CustomDjangoModelPermissions
 from .controllers import RequestDataController
 from .models import Article, Comment
 from .serializers import ArticleSerializer, CommentSerializer
@@ -10,13 +11,13 @@ from .serializers import ArticleSerializer, CommentSerializer
 # Create your views here.
 class ArticleService(ModelViewSet):
     queryset = Article.objects.all()
-    permission_classes = [IsAuthenticated, DjangoModelPermissions]
+    permission_classes = [IsAuthenticated, CustomDjangoModelPermissions]
     serializer_class = ArticleSerializer
 
 
 class CommentService(ModelViewSet):
     queryset = Comment.objects.all()
-    permission_classes = [IsAuthenticated, DjangoModelPermissions]
+    permission_classes = [IsAuthenticated, CustomDjangoModelPermissions]
     serializer_class = CommentSerializer
 
     def get_queryset(self):

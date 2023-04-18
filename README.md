@@ -78,6 +78,7 @@ In addition to Authentication, the Article Web Service has a permission strategy
 
 | Method   | Permission |
 | ---------| -----------|
+| GET     | articles.view_article |
 | POST     | articles.add_article |
 | PUT      | articles.change_article |
 | PATCH    | articles.change_article |
@@ -110,6 +111,7 @@ Comment Web Service also uses DjangoModelPermissions; its mapping is shown below
 
 | Method   | Permission |
 | ---------| -----------|
+| GET     | articles.view_comment |
 | POST     | articles.add_comment |
 | PUT      | articles.change_comment |
 | PATCH    | articles.change_comment |
