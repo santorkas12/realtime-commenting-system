@@ -17,7 +17,23 @@ The RealTime Commenting System (RTCS) is RESTful API based on Django, Django Res
 
 <a id="installation"></a>
 ## Installation
-The required libraries for this project are outlined in the 'requirements.txt' file in the project's root directory. The project is setup to work with a MySQL database, and the credentials for it can be specified in the project's .env file. 
+The project is setup to work with a MySQL database. The database credentials which can be defined in the .env file in the project's root directory.
+
+The required libraries for this project are outlined in the 'requirements.txt' file in the project's home directory (rtcs). A dedicated Python virtual environment with these libraries pre-installed is provided. To run the project's development server:
+
+1. Navigate to 'rtcs_venv/Scripts/' from the root directory (the directory that contains the .env file) and call the 'activate' command.
+```
+    cd 'rtcs_venv/Scripts
+    activate
+```
+
+2. Navigate back to the root directory and to the project's home directory and use the runserver manage commands to run the development server.
+```
+    cd ../../rtcs
+    python manage.py runserver
+```
+This will run a Django development server at 127.0.0.1:8000. 
+
 
 <a id="auth-sec"></a>
 ## Authentication and Security
@@ -57,7 +73,7 @@ The API exposes endpoints for managing the Article and Comment entities on the s
 * PATCH /articles/<article_id>: Modifies article with id 'article_id'.
 * DELETE /articles/<article_id>: Deletes article with id 'article_id'
 
-The POST method expect a JSON payload containing a 'title' and 'content' entries, as shown below:
+The POST method expects a JSON payload containing a 'title' and 'content' entries, as shown below:
 
 ```
 {
@@ -74,7 +90,7 @@ The PUT and PATCH methods are concerned with a specific article instance and hen
 }
 ```
 
-In addition to Authentication, the Article Web Service has a permission strategy based on the 'DjangoModelPermissions' scheme provided by DRF. DjangoModelPermissions maps the built-in permission objects that are created for the model to the unsafe methods of the API Endpoint. In this case these are:
+In addition to Authentication, the Article Web Service has a custom permission strategy based on the 'DjangoModelPermissions' scheme provided by DRF. DjangoModelPermissions maps the built-in permission objects that are created for the model to the unsafe methods of the API Endpoint. The default implementation has been overriden to apply permission checks to GET endpoints, which are not included by default. The permissions for the Article Web Service are:
 
 | Method   | Permission |
 | ---------| -----------|
@@ -107,7 +123,7 @@ In addition to the 'content' field, the Comment model contains three other field
 * timestamp: Datetime field which is added automatically when a comment is created
 * article: The article id that this comment is related to, set based on the <article_id> parameter of the URL.
 
-Comment Web Service also uses DjangoModelPermissions; its mapping is shown below.
+The Comment Web Service's permission strategy is identical to the Article Web Service mentioned above, and based on a customized version of DjangoModelPermissions. The permissions for the Comment Web Service are:
 
 | Method   | Permission |
 | ---------| -----------|
@@ -121,6 +137,6 @@ Comment Web Service also uses DjangoModelPermissions; its mapping is shown below
 ### Real-time updates with Websockets
 The RTCS project also exposes a Websocket server from which clients can receive new comments on an Article in real time. This has been developed using Django Channels with an InMemory channel layer for testing and development purposes. 
 
-Websocket consumers (connections) are available for viewing each articles new comments in real-time. Using the ws://<server_ip>:<port>/ws/article/<article_id>/comments URL, users can receive all new comments for Article with ID <article_id> in real-time. For example, when a user navigates to view an Article's comments using the UI, in addition to GET /articles/<article_id>/comments, which would retrieve all existing comments of that article, a ws/article/<article_id>/comments request will be sent to establish a Websocket connection with the server, over which new comments will be received as soon as they are created with POST /articles/<article_id>/comments.
+Websocket consumers (connections) are available for viewing each articles new comments in real-time. Using the ***ws://<server_ip>:<port>/ws/article/<article_id>/comments*** URL, users can receive all new comments for Article with ID <article_id> in real-time. For example, when a user navigates to view an Article's comments using the UI, in addition to GET /articles/<article_id>/comments, which would retrieve all existing comments of that article, a ws/article/<article_id>/comments request will be sent to establish a Websocket connection with the server, over which new comments will be received as soon as they are created with POST /articles/<article_id>/comments.
 
-***Note that establishing a Websocket connection with ws/article/<article_id>/comments requires the 'Origin' header to be set. Its value in the development environment is http://127.0.0.1:8000.***
+***Note that establishing a Websocket connection with ws/article/<article_id>/comments requires the 'Origin' header to be set*** Its expected format is http://<server_ip>:<server_port>, and its value in the default development environment is http://127.0.0.1:8000.
