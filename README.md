@@ -6,13 +6,27 @@ The RealTime Commenting System (RTCS) is RESTful API based on Django, Django Res
 * Creating, Reading, Updating and Deleting an Article's Comments objects.
 * Viewing the Comment objects related to an Article object with real-time updates for new comments.
 
+ **Table of contents:**
+ - [Installation](#installation)
+ - [Authentication and Security](#auth-sec)
+    - [Login](#login)
+    - [Permissions](#perms)
+    - [Article Web Service](#articles)
+    - [Comment Web Service](#comments)
+ - [Real-time updates with Websockets](#ws)
 
+<a id="installation"></a>
+## Installation
+The required libraries for this project are outlined in the 'requirements.txt' file in the project's root directory. The project is setup to work with a MySQL database, and the credentials for it can be specified in the main rtcs/settings.py file. 
+
+<a id="auth-sec"></a>
 ## Authentication and Security
 
 The API uses DRF's SessionAuthentication scheme, which is based on the presence of a session cookie (set by the Server on login response) for accessing the API's resources. Once a user is authenticated on the system via the dedicated endpoint (more details below), the login response will return the Session cookie (named 'sessionid') which will allow access to all GET methods of the API. 
 
 Additional CSRF verification is required for usage of 'unsafe' methods that alter the state of the system (POST, PUT, PATCH, DELETE). When a user authenticates successfully on the system, they will receive the 'csrftoken' cookie (set on login response), and will have to include its value as a header named 'X-CSRFToken' on all 'unsafe' API calls. 
 
+<a id="login"></a>
 ### Login
 
 The authentication entry point for the API is the 'POST /auth/login/' endpoint. It expects a JSON payload with the user's username and password, as shown below:
@@ -28,12 +42,13 @@ If successful, the Response will return a "Success" JSON response payload and tw
 
 ***Note that the POST /auth/login/ endpoint is CSRF-exempt, as it is the entry point at which the CSRF cookie is obtained and thus can be accessible by any unauthenticated user.***
 
-
+<a id="perms"></a>
 ### Permissions
 
 The API exposes endpoints for managing the Article and Comment entities on the system with CRUD operations.
 
-### Article Web Service
+<a id="articles"></a>
+#### Article Web Service
 
 * GET /articles/: Lists all articles from the system's database
 * GET /articles/<article_id>: Retrieves a specific article with id 'article_id'
@@ -68,8 +83,8 @@ In addition to Authentication, the Article Web Service has a permission strategy
 | PATCH    | articles.change_article |
 | DELETE   | articles.delete_article |
 
-
-### Comment Web Service
+<a id="comments"></a>
+#### Comment Web Service
 * GET /articles/<article_id>/comments: Lists all comments related to article with id <article_id>
 * GET /articles/<article_id>/comments/<comment_id>: Retrieves a specific comment with id <comment_id>, related to article with id <article_id>
 * POST /articles/<article_id>/comments: Creates a new comment related to article with id <article_id>
@@ -99,3 +114,11 @@ Comment Web Service also uses DjangoModelPermissions; its mapping is shown below
 | PUT      | articles.change_comment |
 | PATCH    | articles.change_comment |
 | DELETE   | articles.delete_comment |
+
+<a id="ws"></a>
+### Real-time updates with Websockets
+The RTCS project also exposes a Websocket server from which clients can receive new comments on an Article in real time. This has been developed using Django Channels with an InMemory channel layer for testing and development purposes. 
+
+Websocket consumers (connections) are available for viewing each articles new comments in real-time. Using the ws://<server_ip>:<port>/ws/article/<article_id>/comments URL, users can receive all new comments for Article with ID <article_id> in real-time. For example, when a user navigates to view an Article's comments using the UI, in addition to GET /articles/<article_id>/comments, which would retrieve all existing comments of that article, a ws/article/<article_id>/comments request will be sent to establish a Websocket connection with the server, over which new comments will be received as soon as they are created with POST /articles/<article_id>/comments.
+
+***Note that establishing a Websocket connection with ws/article/<article_id>/comments requires the 'Origin' header to be set. Its value in the development environment is http://127.0.0.1:8000.***
