@@ -17,7 +17,7 @@ The RealTime Commenting System (RTCS) is RESTful API based on Django, Django Res
 
 <a id="installation"></a>
 ## Installation
-The required libraries for this project are outlined in the 'requirements.txt' file in the project's root directory. The project is setup to work with a MySQL database, and the credentials for it can be specified in the main rtcs/settings.py file. 
+The required libraries for this project are outlined in the 'requirements.txt' file in the project's root directory. The project is setup to work with a MySQL database, and the credentials for it can be specified in the project's .env file. 
 
 <a id="auth-sec"></a>
 ## Authentication and Security
