@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'daphne',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'authenticator',
     'articles'
-    # 'channels'
 ]
 
 MIDDLEWARE = [
@@ -73,7 +72,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'rtcs.wsgi.application'
-
+ASGI_APPLICATION = 'rtcs.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
