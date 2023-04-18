@@ -21,4 +21,4 @@ class LoginService(APIView):
             response.set_cookie('sessionid', request.session.session_key)
             return response
         else:
-            return Response({{'result': 'Fail', 'message': 'Invalid credentials'}}, content_type='application/json', status=400)
+            return Response({'result': 'Fail', 'message': 'Invalid credentials'}, content_type='application/json', status=400)
