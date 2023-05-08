@@ -17,11 +17,11 @@ The RealTime Commenting System (RTCS) is RESTful API based on Django, Django Res
 
 <a id="installation"></a>
 ## Installation
-The project is setup to work with a MySQL database. The database credentials which can be defined in the .env file in the project's root directory.
+The project is setup to work with a MySQL database. The database credentials which can be defined in the rtcs/settings.py file in the project's root directory.
 
 The required libraries for this project are outlined in the 'requirements.txt' file in the project's home directory (rtcs). A dedicated Python virtual environment with these libraries pre-installed is provided. To run the project's development server:
 
-1. Navigate to 'rtcs_venv/Scripts/' from the root directory (the directory that contains the .env file) and call the 'activate' command.
+1. Navigate to 'rtcs_venv/Scripts/' from the root directory and call the 'activate' command.
 ```
     cd 'rtcs_venv/Scripts
     activate
